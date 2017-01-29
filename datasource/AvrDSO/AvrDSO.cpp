@@ -115,8 +115,6 @@ AvrDSODataSource::AvrDSODataSource(const DataSourceDescription *description) :
         (void) closedir (dp);
         inputList.sort();
     }
-    if (inputList.empty())
-        return false;
 
     // If required, display a dialog with inputs names.
     if (inputList.size() > 1)

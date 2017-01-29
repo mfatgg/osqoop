@@ -6,10 +6,12 @@ set(osqoop_SRCS
 	Osqoop.cpp
 	Utilities.cpp
 	ProcessingPluginDialog.cpp
+    FFTWidget.cpp
 )
 qt4_automoc(${osqoop_SRCS})
 qt4_add_resources(osqoop_RESS Osqoop.qrc)
 add_executable(osqoop ${osqoop_SRCS} ${osqoop_RESS})
 include_directories (${CMAKE_BINARY_DIR}/src)
+include_directories (${CMAKE_SOURCE_DIR}/processing/lib)
 target_link_libraries(osqoop ${QT_LIBRARIES})
 install(TARGETS osqoop RUNTIME DESTINATION bin)

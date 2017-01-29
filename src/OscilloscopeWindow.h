@@ -33,6 +33,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "SignalDisplayData.h"
 #include "DataConverter.h"
 #include "Utilities.h"
+#include "FFTWidget.h"
 
 #include <QMainWindow>
 #include <QMetaType>
@@ -64,6 +65,7 @@ public:
 	OscilloscopeWindow();
 	virtual ~OscilloscopeWindow();
 	bool isValid();
+	FFTWidget *fftView;
 	
 private slots:
 	void setData(const std::valarray<signed short> &, unsigned, unsigned, unsigned, unsigned, unsigned);

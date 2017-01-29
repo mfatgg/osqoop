@@ -237,6 +237,9 @@ void DataConverter::run()
 		if (microSecondToSleep)
 			QThread::usleep(microSecondToSleep);
 		
+        // Signal to FFT engine.
+		emit dataReady(linearSamples[0], 512, 0, 0, 0, DATA_FFT);
+
 		// apply plugins
 		for (unsigned plugin = 0; plugin < plugins.size(); plugin++)
 		{

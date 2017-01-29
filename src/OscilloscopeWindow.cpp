@@ -35,6 +35,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #include "DataConverter.h"
 #include "DataSource.h"
 #include "Version.h"
+#include "FFTWidget.h"
 
 #include <QMenu>
 #include <QAction>
@@ -125,9 +126,11 @@ OscilloscopeWindow::OscilloscopeWindow()
 		zoomedView = new SignalViewWidget(&signalInfo, dataSource->unitPerVoltCount(), true);
 		zoomedView->setVisible(false);
 		connect(mainView, SIGNAL(zoomPosChanged(int,int)), zoomedView, SLOT(setZoomPos(int,int)));
+        fftView = new FFTWidget();
 		
 		splitter->addWidget(mainView);
 		splitter->addWidget(zoomedView);
+		splitter->addWidget(fftView);
 		
 		setCentralWidget(splitter);
 		
@@ -264,7 +267,12 @@ void OscilloscopeWindow::setData(const std::valarray<signed short> &data, unsign
 		wasFrozen = false;
 	}
 	
-	if (!wasFrozen)
+    // Got signal for FFT data processing?
+	if (flags & DataConverter::DATA_FFT)
+	{
+        fftView->processData(data, dataSource->samplingRate(), dataSource->unitPerVoltCount());
+	}
+	else if (!wasFrozen)
 	{
 		// new datas
 		Q_ASSERT(data.size() / channelCount <= signalInfo.samplePerChannelCount);

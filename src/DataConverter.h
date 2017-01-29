@@ -58,7 +58,8 @@ public:
 	{
 		DATA_FRAME_START = 0x1, //!< start of a new data frame, reread parameters
 		DATA_FRAME_END = 0x2, //!< end of the data frame
-		DATA_FRAME_START_END = 0x3 //!< both start and end
+		DATA_FRAME_START_END = 0x3, //!< both start and end
+		DATA_FFT = 0x4 //!< for processing by FFT engine
 	};
 
 	//! the state of an active plugin

@@ -6,6 +6,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake/modules ${CMAKE_MODULE_PATH})
 find_package(Qt4 REQUIRED)
 find_package(LibUSB)
 find_package(FFTW)
+find_package(Qwt)
 include(${QT_USE_FILE})
 add_definitions(${QT_DEFINITIONS})
 

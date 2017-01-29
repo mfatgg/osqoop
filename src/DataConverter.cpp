@@ -50,7 +50,13 @@ DataConverter::DataConverter(DataSource *dataSource, unsigned channelCount, unsi
 	// init datas from parameters
 	this->dataSource = dataSource;
 	samplingRate = dataSource->samplingRate();
-	_outputSampleCount = ((samplingRate * timescale) / 1000) + 1;
+	isNonContinuous = dataSource->isNonContinuous();
+    // Support for non-continuous data sources:
+    // use device-dependent function for number of samples calculation
+	if (isNonContinuous)
+        _outputSampleCount = dataSource->getSamplesAmount(timescale);
+    else
+        _outputSampleCount = ((samplingRate * timescale) / 1000) + 1;
 	_channelCount = channelCount;
 	_outputTime = timescale;
 	
@@ -113,7 +119,12 @@ void DataConverter::setTimeScale(unsigned ms)
 {
 	QMutexLocker locker(&mutex);
 	double oldTriggerPos = static_cast<double>(_triggerPos) / static_cast<double>(_outputSampleCount);
-	_outputSampleCount = ((samplingRate * ms) / 1000)+1;
+    // Support for non-continuous data sources:
+    // use device-dependent function for number of samples calculation
+	if (isNonContinuous)
+        _outputSampleCount = dataSource->getSamplesAmount(ms);
+    else
+        _outputSampleCount = ((samplingRate * ms) / 1000) + 1;
 	_outputTime = ms;
 	_triggerPos = static_cast<unsigned>(oldTriggerPos * static_cast<double>(_outputSampleCount));
 }
@@ -247,7 +258,22 @@ void DataConverter::run()
 		}
 
 		// trigger
-		for (size_t sample = 0; sample < 512; sample++)
+		//for (size_t sample = 0; sample < 512; sample++)
+		size_t samplerun = 512;
+		size_t triggerrun = outputSampleCount;
+        // Support for non-continuous data sources:
+        // Modify samplerun and triggerrun according to number of samples of device setting.
+        // This makes sure that trigger is not searched for outside of current snapshot window of samples.
+        // samplerun = maximum block size for processing data (was hard-coded to 512 originally).
+        // triggerrun = number of samples to search for trigger.
+		if (isNonContinuous)
+		{
+            //actOutputSample = 0;
+            if (outputSampleCount+1 < 512)
+                samplerun = outputSampleCount+1;
+            triggerrun = samplerun;
+		}
+		for (size_t sample = 0; sample < samplerun; sample++)
 		{
 			unsigned actOutputSamplePos = actOutputSample % outputSampleCount;
 			for (size_t channel = 0; channel < channelCount; channel++)
@@ -311,11 +337,13 @@ void DataConverter::run()
                     leftToGet--;
 			}
 
-			// we have either get all the samples or we have elapsed time
+			// we have either get all the samples or we have elapsed time,
+            // Support for non-continuous data sources:
+            // Send block when all samples of snapshot window have been processed.
 			if (
 				(triggerLocked && (leftToGet == 0)) || // all sample got
-				((triggerType != TRIGGER_NONE) && (!triggerLocked) && (triggerTimeout) && (actOutputSample > outputSampleCount + triggerPos)) || // no trigger found, timeout and send anyway
-				((triggerType == TRIGGER_NONE) && (actOutputSample > outputSampleCount)) // triggerDisabled
+				((triggerType != TRIGGER_NONE) && (!triggerLocked) && (triggerTimeout) && (actOutputSample > triggerrun + triggerPos)) || // no trigger found, timeout and send anyway
+				((triggerType == TRIGGER_NONE) && (actOutputSample > triggerrun)) // triggerDisabled
 				)
 			{
 				// packet full, emit it

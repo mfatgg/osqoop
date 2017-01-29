@@ -71,6 +71,11 @@ public:
 	//! Read the raw data from source. Return the number of microsecond the data converter should sleep. If 0, do not sleep
 	virtual unsigned getRawData(std::valarray<std::valarray<signed short> > *data) = 0;
 	
+    //! Get device sample acquisition support (snapshot only or continuous stream)
+    virtual bool isNonContinuous() = 0;
+    //! Get number of samples of device for selected timescale
+    virtual unsigned getSamplesAmount(unsigned timescale) = 0;
+
 	//! Return the number of inputs of the data source
 	virtual unsigned inputCount() const = 0;
 	//! Return the sample rate of the data source

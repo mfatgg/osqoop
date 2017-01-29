@@ -105,6 +105,7 @@ protected:
 protected:
 	bool quit; //!< false by default, if set to true stop converter thread
 	unsigned samplingRate; //!< the sampling rate of the source
+	bool isNonContinuous; //!< true for sample snapshot only support, false for continuous sample stream
 	DataSource *dataSource; //!< the data source
 	
 	ActivePlugins _plugins; //!< processing plugins

@@ -1,10 +1,8 @@
-/**
- * Bootloader um dem Mikrocontroller Bootloader von Peter Dannegger anzusteuern
- *
- * License: GPL
- *
- * @author Andreas Butti
- */
+//! Library for serial (com) port access for unix-like systems, e.g. Linux.
+//! Support for arbitrary baudrates up to 3 MBaud (e.g. for usb serial converter).
+//!
+//! Slightly based on implementation by @author Andreas Butti.
+
 
 #ifndef COM_UNIX_H_INCLUDED
 #define COM_UNIX_H_INCLUDED

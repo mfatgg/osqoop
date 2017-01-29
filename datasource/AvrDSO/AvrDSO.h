@@ -41,7 +41,7 @@ public:
 	virtual DataSource *create() const;
 };
 
-//! AvrDSO, a simple sinus generator of various frequencies
+//! AvrDSO, a digital sampling oscilloscope based on a diy homebrew project
 class AvrDSODataSource : public DataSource
 {
 private:

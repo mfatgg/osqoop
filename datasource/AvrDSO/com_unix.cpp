@@ -1,3 +1,9 @@
+//! Library for serial (com) port access for unix-like systems, e.g. Linux.
+//! Support for arbitrary baudrates up to 3 MBaud (e.g. for usb serial converter).
+//!
+//! Slightly based on implementation by @author Andreas Butti.
+
+
 /// Includes
 #include <stdio.h>
 #include <time.h>

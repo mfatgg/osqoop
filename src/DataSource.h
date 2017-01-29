@@ -72,9 +72,9 @@ public:
 	virtual unsigned getRawData(std::valarray<std::valarray<signed short> > *data) = 0;
 	
     //! Get device sample acquisition support (snapshot only or continuous stream)
-    virtual bool isNonContinuous() = 0;
+    virtual bool isNonContinuous() {return false;};
     //! Get number of samples of device for selected timescale
-    virtual unsigned getSamplesAmount(unsigned timescale) = 0;
+    virtual unsigned getSamplesAmount(unsigned timescale) {return timescale-timescale;};
 
 	//! Return the number of inputs of the data source
 	virtual unsigned inputCount() const = 0;

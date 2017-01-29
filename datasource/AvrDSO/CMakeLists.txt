@@ -1,0 +1,5 @@
+set(AvrDSO_SRCS AvrDSO.cpp com_unix.cpp)
+qt4_automoc(${AvrDSO_SRCS})
+include_directories (${CMAKE_BINARY_DIR}/datasource/AvrDSO)
+add_library(AvrDSO MODULE ${AvrDSO_SRCS})
+install(TARGETS AvrDSO DESTINATION share/osqoop/datasource)
